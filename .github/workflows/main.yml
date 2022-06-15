@@ -18,7 +18,7 @@ jobs:
         node-version: '17.x'
     
     - name: Install dependencies
-      run: npm cli
+      run: npm ci
     
     - name: Test
       run: npm test
