@@ -1,11 +1,12 @@
-import ProductInterface from "./product.interface";
+import Entity from "../../@shared/entity/entity.abstract";
+import { ProductInterface } from "./product.interface";
 
-export default class Product implements ProductInterface {
-    private _id: string;
+export default class Product extends Entity implements ProductInterface {
     private _name: string;
     private _price: number;
 
     constructor(id: string, name: string, price: number) {
+        super()
         this._id = id;
         this._name = name;
         this._price = price;
@@ -41,7 +42,7 @@ export default class Product implements ProductInterface {
         }
 
         if(this._name.length === 0) {
-            throw new Error("Name is required");;
+            throw new Error("Name is required");
             
         }
 
