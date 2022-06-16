@@ -1,13 +1,25 @@
+import { Sequelize } from "sequelize-typescript";
+import ProductModel from "../../../infrastructure/product/repository/sequelize/product.model";
+import ProductRepository from "../../../infrastructure/product/repository/sequelize/product.repository";
 import CreateProductUseCase from "./create.product.usecase";
 
-const MockRepository = () => { 
-    return {
-        create: jest.fn(),
-        find: jest.fn(),
-        findAll: jest.fn(),
-        update: jest.fn(),
-    }
-};
+let sequelize: Sequelize;
+
+beforeEach(async () => {
+    sequelize = new Sequelize({
+        dialect: "sqlite",
+        storage: ":memory:",
+        logging: false,
+        sync: {force: true}
+    });
+
+    sequelize.addModels([ProductModel]);
+    await sequelize.sync();
+});
+
+afterEach(async () => {
+    await sequelize.close();
+});
 
 describe("product A create usecase unit test", () => {
     const input = {
@@ -17,7 +29,7 @@ describe("product A create usecase unit test", () => {
     };
 
     it("should create a product", async () => {
-        const productRepository = MockRepository();
+        const productRepository = new ProductRepository();
         const productCreateUseCase = new CreateProductUseCase(productRepository);
 
         const output = await productCreateUseCase.execute(input);
@@ -30,7 +42,7 @@ describe("product A create usecase unit test", () => {
     });
 
     it("should throw an error when product's name is empty", async () => {
-        const productRepository = MockRepository();
+        const productRepository = new ProductRepository();
         const productCreateUseCase = new CreateProductUseCase(productRepository);
 
         input.name = "";
@@ -42,7 +54,7 @@ describe("product A create usecase unit test", () => {
     });
 
     it("should thrown an error when product's price is less than zero", async () => {
-        const productRepository = MockRepository();
+        const productRepository = new ProductRepository();
         const productCreateUseCase = new CreateProductUseCase(productRepository);
         
         input.price = -10;
@@ -60,7 +72,7 @@ describe("product B create usecase unit test", () => {
     };
 
     it("should create a product", async () => {
-        const productRepository = MockRepository();
+        const productRepository = new ProductRepository();
         const productCreateUseCase = new CreateProductUseCase(productRepository);
 
         const output = await productCreateUseCase.execute(input);
@@ -73,7 +85,7 @@ describe("product B create usecase unit test", () => {
     });
 
     it("should throw an error when product's name is empty", async () => {
-        const productRepository = MockRepository();
+        const productRepository = new ProductRepository();
         const productCreateUseCase = new CreateProductUseCase(productRepository);
 
         input.name = "";
@@ -85,7 +97,7 @@ describe("product B create usecase unit test", () => {
     });
 
     it("should thrown an error when product's price is less than zero", async () => {
-        const productRepository = MockRepository();
+        const productRepository = new ProductRepository();
         const productCreateUseCase = new CreateProductUseCase(productRepository);
         
         input.price = -10;
@@ -103,7 +115,7 @@ describe("product unknown create usecase unit test", () => {
     };
 
     it("should thrown a product type not supported error", async () => {
-        const productRepository = MockRepository();
+        const productRepository = new ProductRepository();
         const productCreateUseCase = new CreateProductUseCase(productRepository);
 
         await expect(productCreateUseCase.execute(input)).rejects.toThrow(
