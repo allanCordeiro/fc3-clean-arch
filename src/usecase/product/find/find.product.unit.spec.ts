@@ -32,14 +32,18 @@ describe("Product find usecase unit tests", () => {
 
     it("should get an exception product not found", () => {
         const productRepository = MockRepository();
+        productRepository.find.mockImplementation(() => {
+            throw new Error("product not found");
+            
+        });
         const usecase = new FindProductUseCase(productRepository);
 
-        const wrongInput = {
+        const input = {
             id: "not_a_product"
         }
 
         expect(() => {
-            return usecase.execute(wrongInput)
+            return usecase.execute(input)
         }).rejects.toThrow("product not found");
     });
 });
