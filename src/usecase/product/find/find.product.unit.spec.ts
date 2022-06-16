@@ -34,12 +34,12 @@ describe("Product find usecase unit tests", () => {
         const productRepository = MockRepository();
         const usecase = new FindProductUseCase(productRepository);
 
-        const input = {
+        const wrongInput = {
             id: "not_a_product"
         }
 
         expect(() => {
-            return usecase.execute(input)
+            return usecase.execute(wrongInput)
         }).rejects.toThrow("product not found");
     });
 });
