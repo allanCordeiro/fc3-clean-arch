@@ -1,18 +1,17 @@
 import Product from "../../../domain/product/entity/product";
 import FindProductUseCase from "./find.product.usecase";
 
-const product = new Product("123", "Product", 123.50);
-
-const MockRepository = () => {
-    return {
-        create: jest.fn(),
-        find: jest.fn().mockReturnValue(Promise.resolve(product)),
-        findAll: jest.fn(),
-        update: jest.fn()
-    }
-};
-
 describe("Product find usecase unit tests", () => {
+    const product = new Product("123", "Product", 123.50);
+
+    const MockRepository = () => {
+        return {
+            create: jest.fn(),
+            find: jest.fn().mockReturnValue(Promise.resolve(product)),
+            findAll: jest.fn(),
+            update: jest.fn()
+        }
+    };
     it("should get a product", async () => {
         const productRepository = MockRepository();
         const usecase = new FindProductUseCase(productRepository);
